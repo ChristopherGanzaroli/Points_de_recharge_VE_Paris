@@ -1,0 +1,35 @@
+/*https://stackoverflow.com/questions/56175268/how-to-properly-add-style-to-my-dash-app*/
+/*https://www.youtube.com/watch?v=x9mUZZ19dl0*/
+/*https://developer.mozilla.org/fr/docs/Web/CSS/background-color*/
+body {
+    margin : 0;
+    padding : 0;
+    background-color: #1E1E1E;
+
+
+
+}
+
+.h1 {
+    margin-top:0;
+}
+
+.map_chexLiest {
+
+    display: flex;
+
+}
+
+.dropdown_map_cp{
+    flex-grow: 1;
+    with: 100px;
+}
+
+.check_list{
+    color : #FFFFFF;
+}
+
+.map{
+    flex-grow: 0.5;
+
+}
