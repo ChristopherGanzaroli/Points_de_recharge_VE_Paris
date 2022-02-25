@@ -5,6 +5,7 @@ import pandas as pd
 from datetime import datetime
 import datetime
 import plotly.express as px
+from pandas.tseries.frequencies import to_offset
 import plotly.graph_objects as go
 
 # In[2]:
@@ -86,14 +87,11 @@ df = pd.read_csv(path + '/stations.csv')
 
 print(df.head())
 
-#Extraire date
-#
-# for elt in sites:
-#      date = elt['fields']['last_updated']
-#      last_date_time_update = datetime.datetime.fromisoformat(date)
-#      last_date_update = last_date_time_update.date()
-#      last_time_update = last_date_time_update.time()
-#      #print(date_time_obj.isoformat())
+#Transform in PD timeserie
+# print(pd.to_datetime(df['last_date_time_update']))
+# print(pd.to_datetime(df['last_date_update']))
+# print(pd.to_datetime(df['last_time_update']))
+
 
 
 # for i in df['adresse_station']:
@@ -119,7 +117,8 @@ df['nb_charging_stations'] = df.groupby(by='adresse_station')['adresse_station']
 
 # In[34]:
 
-
+#CREATION GRPH---------------------------------------------------------------------------------------------------
+#MAP
 px.set_mapbox_access_token(open(path2 + "/mapbox_token.txt").read())
 fig = px.scatter_mapbox(df, lat='lat', lon='long', color='statut_pdc', size='nb_charging_stations',
                         mapbox_style='carto-darkmatter', animation_group='adresse_station',height=500,
@@ -128,6 +127,19 @@ fig = px.scatter_mapbox(df, lat='lat', lon='long', color='statut_pdc', size='nb_
                         color_continuous_scale=px.colors.cyclical.IceFire, size_max=10, zoom=11.2)
 fig.update_layout(margin={"r":0,"t":0,"l":50,"b":0})
 # fig.show()
+
+
+
+#HISTOGRAM
+
+print(df['last_time_update'].groupby(pd.Grouper(freq='60Min', base=30, label='right')).first())
+print(type(df['last_time_update'][0]))
+fig_hist = px.histogram(df, x="last_time_update", nbins=23)
+#fig_hist.show()
+
+
+
+
 
 #test pour app dash
 import plotly.graph_objects as go
@@ -226,7 +238,7 @@ app.layout = html.Div(style={'background-color': app_colors['background'],
                                             figure=fig
                               ),
                                           dcc.Graph(
-                                            figure=fig
+                                            figure=fig_hist
                               )
                         ]
                     ),
