@@ -4,32 +4,40 @@
 body {
     margin : 0;
     padding : 0;
+
     background-color: #1E1E1E;
-
-
 
 }
 
 .h1 {
     margin-top:0;
+    color : #FFFFFF;
+    text-align: center;
 }
 
-.map_chexLiest {
+.all_compenents{
+    display:flex;
+}
 
-    display: flex;
+.map_hist{
+    float:right;
+    display: block;
+    /*width:90%;*/
 
 }
 
-.dropdown_map_cp{
+.div_left_components{
     flex-grow: 1;
-    with: 100px;
+    padding: 2%
+
+
+
+
 }
 
 .check_list{
     color : #FFFFFF;
-}
-
-.map{
-    flex-grow: 0.5;
 
 }
+
+
