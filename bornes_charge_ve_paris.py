@@ -37,7 +37,7 @@ json.dumps(data, indent=4, sort_keys=False)
 
 
 path = "/Users/ganza/OneDrive/Bureau/Projet_prerso/python/points_recharche_VE_open_data/data"
-path2 = "/Users/ganza/OneDrive/Bureau/Projet_prerso/python/points_recharche_VE_open_data"
+path_token = "/Users//ganza//OneDrive//Bureau//Projet_prerso//python//pythonProject//bornes_recharge_application_dash"
 
 # In[7]:
 
@@ -105,33 +105,49 @@ df['nb_charging_stations'] = df.groupby(by='adresse_station')['adresse_station']
 
 #CREATION GRPH---------------------------------------------------------------------------------------------------
 #MAP
-px.set_mapbox_access_token(open(path2 + "/mapbox_token.txt").read())
-fig = px.scatter_mapbox(df, lat='lat', lon='long', color='statut_pdc', size='nb_charging_stations',
-                        mapbox_style='carto-darkmatter', animation_group='adresse_station',height=300,
-                        labels='nb_charging_stations',
-                        # hover_data=[df['statut_pdc'][i] for i in range(df.shape[0])],
-                        color_continuous_scale=px.colors.cyclical.IceFire, size_max=10, zoom=11.2)
-fig.update_layout(margin={"r":0,"t":0,"l":50,"b":0})
-# fig.show()
+mapbox_access_token = px.set_mapbox_access_token(open(path_token + "/mapbox_token.txt").read())
+# fig = px.scatter_mapbox(df, lat='lat', lon='long', color='statut_pdc', size='nb_charging_stations',
+#                         mapbox_style='carto-darkmatter', animation_group='adresse_station',opacity=0.70,
+#                         labels='nb_charging_stations',
+#                         # hover_data=[df['statut_pdc'][i] for i in range(df.shape[0])],
+#                         color_continuous_scale=px.colors.cyclical.IceFire, size_max=7, zoom=11.2)
+#fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
+fig = go.Figure(go.Scattermapbox(
+            lat=df["lat"],
+            lon=df["long"],
+        mode='markers',
+        marker=go.scattermapbox.Marker(
+            size=9,
+            #color=df['statut_pdc'],
+        ),
+        text=df['statut_pdc'],
+    ))
+
+fig.update_layout(
+    autosize=True,
+    hovermode='closest',
+
+    mapbox=dict(
+        accesstoken="pk.eyJ1IjoiY2hyaXN0b3BoZXJnYW56YXJvbGkiLCJhIjoiY2t6bHN4Y2t6MmhkdDJwbzBoMGo4bDkyMSJ9.dHqwH6gzC1o8V24zUrTwIg",
+        bearing=0,
+
+        style="dark",
+        center=dict(
+            lat=48.86409,
+            lon=2.3437343
+
+        ),
+        pitch=0,
+        zoom=11.2,
+
+    ),
+)
 
 
 
 #HISTOGRAM
-
-# print(df['last_time_update'].groupby(pd.Grouper(freq='60Min', base=30, label='right')).first())
-# print(type(df['last_time_update'][0]))
-import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib.dates import num2date
-
-
-fig_hist = px.histogram(df, x="last_update_by_hour",height=300)
-#fig.add_trace(go.Histogram(x=numbers, name="count", texttemplate="%{x}", textfont_size=20))
-
-#fig_hist.show()
-
-
-
+fig_hist = px.histogram(df, x="last_update_by_hour",nbins=23)
+# fig_hist = px.histogram(df, x="last_update_by_hour", y="statut_pdc", histfunc="count", nbins=24, text_auto=True)
 
 
 
@@ -152,7 +168,7 @@ dropdow_map_options = [dict(label=x, value=x)
 app = Dash(__name__)
 
 app_colors = {
-    'background': '#0B0B0B',
+    'background': '#343332',
     'text': '#FFFFFF'
 }
 
@@ -167,7 +183,7 @@ fig_hist.update_layout(
     plot_bgcolor=app_colors['background'],
     paper_bgcolor=app_colors['background'],
     font_color=app_colors['text'],
-    margin={"r":0,"t":0,"l":0,"b":0}
+    margin={"r":0,"t":0,"l":0}
 )
 
 app.title = "Stations de recharge Paris"
@@ -223,14 +239,20 @@ app.layout = html.Div(style={'background-color': app_colors['background'],
                           #Map hist
                           html.Div(className='map_hist',
                                    children=[
-                                       dcc.Graph(
-                                           figure=fig
+                                       html.Div(
+                                           dcc.Graph(className='map',
+                                               figure=fig
+                                           )
                                        ),
-                                       dcc.Graph(
-                                           figure=fig_hist
-                                       )
+                                       html.Div(
+
+                                               dcc.Graph(className='hist',
+                                                   figure=fig_hist
+                                               )
+
+                                    )
                                    ]
-                                   )
+                                )
 
 
                         ])

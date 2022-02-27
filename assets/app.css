@@ -4,10 +4,13 @@
 body {
     margin : 0;
     padding : 0;
-
     background-color: #1E1E1E;
 
+
 }
+
+
+
 
 .h1 {
     margin-top:0;
@@ -17,19 +20,29 @@ body {
 
 .all_compenents{
     display:flex;
+    height: 80vh;
 }
 
 .map_hist{
     float:right;
-    display: block;
-    /*width:90%;*/
+    display: inline-block;
+    /*width: 70%;*/
+    width:70vw;
 
+
+}
+.map{
+    height:50vh;
+}
+
+.hist{
+    height:50vh;
 }
 
 .div_left_components{
     flex-grow: 1;
-    padding: 2%
-
+    padding: 2%;
+    background-color: #1E1E1E;
 
 
 
