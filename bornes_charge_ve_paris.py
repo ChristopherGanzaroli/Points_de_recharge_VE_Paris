@@ -37,7 +37,7 @@ json.dumps(data, indent=4, sort_keys=False)
 # In[6]:
 
 
-path = "/Users/ganza/OneDrive/Bureau/Projet_prerso/python/points_recharche_VE_open_data/data"
+path = "/Users/ganza/OneDrive/Bureau/Projet_prerso/python/pythonProject/bornes_recharge_application_dash/data"
 path_token = "/Users//ganza//OneDrive//Bureau//Projet_prerso//python//pythonProject//bornes_recharge_application_dash"
 
 # In[7]:
@@ -46,7 +46,7 @@ path_token = "/Users//ganza//OneDrive//Bureau//Projet_prerso//python//pythonProj
 with open(path + '/data.json', 'w') as json_file:
     json.dump(data, json_file, indent=4, sort_keys=False)
 
-# In[8]:
+# # In[8]:
 
 
 sites = data['records']
@@ -89,9 +89,6 @@ print(df.head())
 # Get hour from index into new col
 df['last_update_by_hour'] = df.index.hour
 
-# nb of station by adress
-
-df.groupby(by='adresse_station')['adresse_station'].transform('count')
 
 
 
