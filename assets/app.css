@@ -20,14 +20,15 @@ body {
 
 .all_compenents{
     display:flex;
-    height: 80vh;
+
 }
 
 .map_hist{
     float:right;
     display: inline-block;
-    /*width: 70%;*/
-    width:70vw;
+
+    flex-grow: 1;
+
 
 
 }
@@ -40,7 +41,8 @@ body {
 }
 
 .div_left_components{
-    flex-grow: 1;
+    flex-grow: 2;
+    width: 30vw;
     padding: 2%;
     background-color: #1E1E1E;
 

@@ -1,7 +1,8 @@
-import requests
 import json
+import requests
 import csv
 import pandas as pd
+import numpy as np
 from datetime import datetime
 import datetime
 import plotly.express as px
@@ -88,6 +89,23 @@ print(df.head())
 # Get hour from index into new col
 df['last_update_by_hour'] = df.index.hour
 
+# nb of station by adress
+
+df.groupby(by='adresse_station')['adresse_station'].transform('count')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -112,20 +130,48 @@ mapbox_access_token = px.set_mapbox_access_token(open(path_token + "/mapbox_toke
 #                         # hover_data=[df['statut_pdc'][i] for i in range(df.shape[0])],
 #                         color_continuous_scale=px.colors.cyclical.IceFire, size_max=7, zoom=11.2)
 #fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
+colorscale=[
+            [0, "#F4EC15"],
+            [0.04167, "#DAF017"],
+            [0.0833, "#BBEC19"],
+            [0.125, "#9DE81B"],
+            [0.1667, "#80E41D"],
+            [0.2083, "#66E01F"],
+            [0.25, "#4CDC20"],
+            [0.292, "#34D822"],
+            [0.333, "#24D249"],
+            [0.375, "#25D042"],
+            [0.4167, "#26CC58"],
+            [0.4583, "#28C86D"],
+            [0.50, "#29C481"],
+            [0.54167, "#2AC093"],
+            [0.5833, "#2BBCA4"],
+            [1.0, "#613099"],
+            ]
+#Attribut color for inch statut for mapbox
+color = np.append(np.insert(df.index.hour, 0, 0), 3)
+print(color)
+
+
 fig = go.Figure(go.Scattermapbox(
             lat=df["lat"],
             lon=df["long"],
-        mode='markers',
-        marker=go.scattermapbox.Marker(
-            size=9,
-            #color=df['statut_pdc'],
-        ),
+            mode='markers',
+        marker=go.scattermapbox.Marker(dict(
+                        #colorscale=color_statut,
+                        size=9,
+                        color=np.append(np.insert(df.index.hour, 0, 0), 24),
+
+                                )
+
+                            ),
         text=df['statut_pdc'],
     ))
 
 fig.update_layout(
     autosize=True,
     hovermode='closest',
+    showlegend=True,
 
     mapbox=dict(
         accesstoken="pk.eyJ1IjoiY2hyaXN0b3BoZXJnYW56YXJvbGkiLCJhIjoiY2t6bHN4Y2t6MmhkdDJwbzBoMGo4bDkyMSJ9.dHqwH6gzC1o8V24zUrTwIg",
@@ -144,9 +190,8 @@ fig.update_layout(
 )
 
 
-
 #HISTOGRAM
-fig_hist = px.histogram(df, x="last_update_by_hour",nbins=23)
+fig_hist = px.histogram(df, x="last_update_by_hour", nbins=24)
 # fig_hist = px.histogram(df, x="last_update_by_hour", y="statut_pdc", histfunc="count", nbins=24, text_auto=True)
 
 
@@ -262,5 +307,5 @@ app.layout = html.Div(style={'background-color': app_colors['background'],
                 )
 
 
-app.run_server(debug=True, use_reloader=True)
+#app.run_server(debug=True, use_reloader=True)
 
