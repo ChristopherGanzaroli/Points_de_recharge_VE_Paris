@@ -84,6 +84,8 @@ df['last_update_by_hour'] = df.index.hour
 # Pour chaque station, on récupère le nombre de bornes disponible
 df['nb_charging_stations'] = df.groupby(by='adresse_station')['adresse_station'].transform('count')
 
+
+
 """
 Pour chaque stations nous allons messurer son occupation.
 
@@ -104,17 +106,30 @@ df["occupation (1=yes, 0=no)"] = df.groupby(by="adresse_station")["occupation (1
 """
 Pour chaque arrondissements, nous voulons messurer le taux d'occupation des stations de recharges
 """
-#dictionnaire comptenant le nombre de bornes occupées pour chaque arrondissements
+#dictionnaire contenant le nombre de bornes occupées pour chaque arrondissements
 from collections import defaultdict
 d = defaultdict(list)
 for k,v in zip(df.code_insee_commune,df["occupation (1=yes, 0=no)"]):
     if v == 1:
         d[k].append(v)
-       
-for k,v in d.items():
-    d[k] = sum(v)
+df_occupation_by_dept = pd.DataFrame(d.items(), columns=['dept', 'nb station anvailable']) 
+#df_occupation_by_dept
 
-    
+#dictionnaire contenant le nombre de bornes de recharge par arrondissements
+d= defaultdict(list)
+for k,v in zip(df.code_insee_commune,df['nb_charging_stations']):     
+        d[k].append(v)
+        
+for k,v in d.items():
+        d[k] = sum(v)  
+df_nb_charging_station_by_dept = pd.DataFrame(d.items(), columns=['dept', 'nb of charging station']) 
+#df_nb_charging_station_by_dept
+
+#Création du dataframe mesurant le taux d'occupation pour chaque arrondissement
+#df_nb_charging_station_by_dept['tx_occupation_by_dept'] = ((df_occupation_by_dept['nb station anvailable']/df_nb_charging_station_by_dept['nb of charging station'])*100).round(2)
+
+
+
         
 # https://opendata.paris.fr/explore/dataset/belib-points-de-recharge-pour-vehicules-electriques-disponibilite-temps-reel/table/?disjunctive.statut_pdc&disjunctive.arrondissement&sort=id_pdc&dataChart=eyJxdWVyaWVzIjpbeyJjaGFydHMiOlt7InR5cGUiOiJjb2x1bW4iLCJmdW5jIjoiQ09VTlQiLCJzY2llbnRpZmljRGlzcGxheSI6dHJ1ZSwiY29sb3IiOiIjRkZDRDAwIn1dLCJ4QXhpcyI6Imxhc3RfdXBkYXRlZCIsIm1heHBvaW50cyI6IiIsInRpbWVzY2FsZSI6ImhvdXIiLCJzb3J0IjoiIiwiY29uZmlnIjp7ImRhdGFzZXQiOiJiZWxpYi1wb2ludHMtZGUtcmVjaGFyZ2UtcG91ci12ZWhpY3VsZXMtZWxlY3RyaXF1ZXMtZGlzcG9uaWJpbGl0ZS10ZW1wcy1yZWVsIiwib3B0aW9ucyI6eyJkaXNqdW5jdGl2ZS5zdGF0dXRfcGRjIjp0cnVlLCJkaXNqdW5jdGl2ZS5hcnJvbmRpc3NlbWVudCI6dHJ1ZSwic29ydCI6ImNvZGVfaW5zZWVfY29tbXVuZSJ9fX1dLCJkaXNwbGF5TGVnZW5kIjp0cnVlLCJhbGlnbk1vbnRoIjp0cnVlfQ%3D%3D&rows=999&timezone=&basemap=jawg.dark&location=12,48.86471,2.33974
 
@@ -144,14 +159,17 @@ colorscale=[
              [0.5833, "#2BBCA4"],
              [1.0, "#613099"],
              ]
+#df.code_insee_commune = df.code_insee_commune.astype(str)
 #On génère une map avec mapbox depuis la librairie plotly
 mapbox_access_token = px.set_mapbox_access_token(open(path_token + "/mapbox_token.txt").read())
-fig = px.scatter_mapbox(df, lat='lat', lon='long', size=(df["occupation (1=yes, 0=no)"]/df["nb_charging_stations"])*100,
+fig = px.scatter_mapbox(df, lat='lat', lon='long', size=((df["occupation (1=yes, 0=no)"]/df["nb_charging_stations"])*100).round(2),
                         mapbox_style='carto-darkmatter', animation_group='adresse_station',opacity=0.20,
-                        labels='nb_charging_stations',hover_data=['nb_charging_stations'],
+                        labels='nb_charging_stations',hover_data=['nb_charging_stations'], color="code_insee_commune",
                         # hover_data=[df['statut_pdc'][i] for i in range(df.shape[0])],
                         color_continuous_scale=px.colors.cyclical.IceFire, size_max=12, zoom=11.2)
-fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
+fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0,})
+
+fig.update_layout(coloraxis_showscale=False)
 #fig.update_traces(hovertemplate=None)
 fig.update_coloraxes(colorscale=colorscale)
 
