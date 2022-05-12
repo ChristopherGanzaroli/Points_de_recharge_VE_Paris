@@ -1,11 +1,12 @@
 /*https://stackoverflow.com/questions/56175268/how-to-properly-add-style-to-my-dash-app*/
 /*https://www.youtube.com/watch?v=x9mUZZ19dl0*/
 /*https://developer.mozilla.org/fr/docs/Web/CSS/background-color*/
+@import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
+
 body {
     margin : 0;
     padding : 0;
     background-color: #1E1E1E;
-
 
 }
 
@@ -16,7 +17,11 @@ body {
     margin-top:0;
     color : #FFFFFF;
     text-align: center;
+    padding-bottom: 40%;
+    font-family: "Open Sans";
+
 }
+
 
 .all_compenents{
     display:flex;
@@ -24,14 +29,12 @@ body {
 }
 
 .map_hist{
-    float:right;
     display: inline-block;
 
     flex-grow: 1;
 
-
-
 }
+
 .map{
     height:50vh;
 }
@@ -44,9 +47,15 @@ body {
     flex-grow: 2;
     width: 30vw;
     padding: 2%;
-    background-color: #1E1E1E;
+    background-color: #1E1E1E; 
 
+}
 
+.elt_in_left_components{
+    flex-grow: 2;
+    width: 30vw;
+    position: sticky;
+    top:4%;
 
 }
 
@@ -55,4 +64,43 @@ body {
 
 }
 
+#DD_dept_input,#DD_adress_input{
+    padding-bottom: 2%;
+    background-color: transparent;
+}
+.DD_div{
+    margin-top: 5%;
+    height: 20vh;
+    
+}
+#output_datatable{
+    padding-top:23%;
 
+}
+
+/*************************************************************RESPONSIVE*********************************************************** */
+
+@MEDIA (max-width: 900px){
+    .all_compenents{
+        display: block;
+    }
+    .div_left_components,.elt_in_left_components{
+        width: 100%;
+    }
+    .DD_div{
+        display: flex;
+        height: 100%;
+        flex-wrap: wrap;
+        justify-content:center
+    }
+    #DD_dept_input{
+        width: 40vw;
+    }
+    #DD_adress_input{
+        width: 40vw;
+    }
+    #output_datatable{
+        padding-top:3%;
+    
+    }
+}
