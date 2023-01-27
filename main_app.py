@@ -178,7 +178,7 @@ app.layout = html.Div(style={'background-color': app_colors['background'],
                                               className='elt_in_left_components',
                                               children=[
                                                   html.H1(
-                                                      "Carte des bornes de recharge à Paris",
+                                                      "Electric car charging stations in Paris",
                                                       style={
                                                           'textAlign': 'center',
                                                           'color': app_colors['text'],
